@@ -1,19 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/syscall.h>
 #include <pthread.h> /*POSIX thread Library*/
 
 void *WorkerThredFunc(void* tid)
 {
     long *MyThreadID = (long *)tid;
     printf("My Worker Thread 1 id = %ld\n",*MyThreadID);
+    printf("Pthread_self          = %ld\n",pthread_self());
+    printf("worker Thread ID TID  = %d\n",(pid_t) syscall(SYS_gettid));
     while(1);
 }
 int main (int argc, char *argv[])
 {
-    /*Basicically pthread_t is a large interger 
+    /*Basicically pthread_t is opaque data type it can be  a unsigned long /long long/ structure
      * which is used to uniquly identify the thread*/
     pthread_t tid1;
+    printf("Main Thread ID TID  = %d\n",(pid_t) syscall(SYS_gettid));
 
 #if 0
     int pthread_create(pthread_t *restrict thread,
